@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import MenuBox from './menuBox';
 import Data from './gameData';
-import Button from './components//button';
 
 const StyledGameMenu = styled('div')`
   display: flex;
