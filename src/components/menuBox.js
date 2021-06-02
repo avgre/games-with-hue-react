@@ -4,6 +4,35 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import Button from './button';
 
+class MenuBox extends Component {
+  handleClick = (evt) => {
+    evt.preventDefault();
+  };
+  render() {
+    return (
+      <StyledWrapper>
+        <StyledBox>
+          <StyledImg src={this.props.game.img} />
+        </StyledBox>
+        <StyledTitle>{this.props.game.name}</StyledTitle>
+        <StyledText>{this.props.game.desc}</StyledText>
+        <StyledLink to={'/' + this.props.game.slug}>
+          <Button
+            color={'hsl(112deg 39% 45%)'}
+            bg1={'112deg 39% 16%'}
+            bg2={'112deg 39% 32%'}
+            onClick={this.handleClick}
+          >
+            PLAY
+          </Button>
+        </StyledLink>
+      </StyledWrapper>
+    );
+  }
+}
+
+export default withRouter(MenuBox);
+
 const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -47,32 +76,3 @@ const StyledLink = styled(Link)`
     text-decoration: none;
   }
 `;
-
-class MenuBox extends Component {
-  handleClick = (evt) => {
-    evt.preventDefault();
-  };
-  render() {
-    return (
-      <StyledWrapper>
-        <StyledBox>
-          <StyledImg src={this.props.game.img} />
-        </StyledBox>
-        <StyledTitle>{this.props.game.name}</StyledTitle>
-        <StyledText>{this.props.game.desc}</StyledText>
-        <StyledLink to={'/' + this.props.game.slug}>
-          <Button
-            color={'hsl(112deg 39% 45%)'}
-            bg1={'112deg 39% 16%'}
-            bg2={'112deg 39% 32%'}
-            onClick={this.handleClick}
-          >
-            PLAY
-          </Button>
-        </StyledLink>
-      </StyledWrapper>
-    );
-  }
-}
-
-export default withRouter(MenuBox);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 function Navigation() {
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -13,17 +13,54 @@ function Navigation() {
       >
         {navbarOpen ? <StyledBurger open /> : <StyledBurger />}
       </Toggle>
+
       {navbarOpen ? (
         <Navbox>
-          <StyledLink to={'/'}>HOME</StyledLink>
-          <StyledLink to={'/'}>SETTINGS</StyledLink>
-          <StyledLink to={'/'}>ABOUT</StyledLink>
+          <StyledLink
+            onClick={() => setNavbarOpen(!navbarOpen)}
+            to={'/'}
+            activeClassName="current-page"
+          >
+            HOME
+          </StyledLink>
+          <StyledLink
+            onClick={() => setNavbarOpen(!navbarOpen)}
+            to={'/settings'}
+            activeClassName="current-page"
+          >
+            SETTINGS
+          </StyledLink>
+          <StyledLink
+            onClick={() => setNavbarOpen(!navbarOpen)}
+            to={'/'}
+            activeClassName="current-page"
+          >
+            ABOUT
+          </StyledLink>
         </Navbox>
       ) : (
         <Navbox open>
-          <StyledLink to={'/'}>HOME</StyledLink>
-          <StyledLink to={'/'}>SETTINGS</StyledLink>
-          <StyledLink to={'/'}>ABOUT</StyledLink>
+          <StyledLink
+            onClick={() => setNavbarOpen(!navbarOpen)}
+            to={'/'}
+            activeClassName="current-page"
+          >
+            HOME
+          </StyledLink>
+          <StyledLink
+            onClick={() => setNavbarOpen(!navbarOpen)}
+            to={'/settings'}
+            activeClassName="current-page"
+          >
+            SETTINGS
+          </StyledLink>
+          <StyledLink
+            onClick={() => setNavbarOpen(!navbarOpen)}
+            to={'/'}
+            activeClassName="current-page"
+          >
+            ABOUT
+          </StyledLink>
         </Navbox>
       )}
     </StyledNavbar>
@@ -32,9 +69,9 @@ function Navigation() {
 
 export default Navigation;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(NavLink)`
+  position: relative;
   font-size: 1.25rem;
-  padding: 10px;
   text-decoration: none;
   color: white;
   &:focus,
@@ -43,6 +80,24 @@ const StyledLink = styled(Link)`
   &:link,
   &:active {
     text-decoration: none;
+  }
+  :after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 0%;
+    content: '.';
+    color: transparent;
+    background: white;
+    height: 1px;
+    transition: all 0.4s ease-in;
+  }
+  :hover {
+    color: #084f87;
+    ::after {
+      width: 100%;
+    }
   }
   @media (max-width: 768px) {
     padding: 20px;
@@ -92,7 +147,6 @@ const Toggle = styled.div`
   height: 100%;
   cursor: pointer;
   padding: 0 3vw;
-
   @media (max-width: 768px) {
     display: flex;
   }
