@@ -73,7 +73,7 @@ function Info(props) {
           </form>
         </>
       );
-    } else if (!clicked) {
+    } else if (props.connected === false && !clicked) {
       return (
         <>
           <Title>Authorization Token:</Title>
