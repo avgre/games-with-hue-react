@@ -55,10 +55,6 @@ class Settings extends Component {
       type: 'SET_LIGHTS',
       payload: bridgeLights,
     });
-    this.props.dispatch({
-      type: 'SET_CONNECTED',
-      payload: true,
-    });
   };
 
   fetchIP = async () => {
@@ -92,10 +88,7 @@ class Settings extends Component {
             type: 'SET_USER',
             payload: data[0].success.username,
           });
-          this.props.dispatch({
-            type: 'SET_CONNECTED',
-            payload: true,
-          });
+
           this.fetchLights(this.props.hubIp);
           this.setState({ newData: new Date() });
           this.requestFailed = false;
