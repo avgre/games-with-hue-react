@@ -80,7 +80,7 @@ const Edge = styled.span`
 class Button extends Component {
   render() {
     return (
-      <Pushable chosen={this.props.chosen} onClick={this.props.onClick}>
+      <Pushable onClick={this.props.onClick}>
         <Shadow className="shadow"></Shadow>
         <Edge
           style={{

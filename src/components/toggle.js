@@ -55,8 +55,8 @@ const SwitchLabel = styled.label`
 const SwitchButton = styled.span`
   content: '';
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: 2px;
+  left: 2px;
   width: 25px;
   height: 25px;
   border-radius: 33px;
@@ -68,7 +68,7 @@ const SwitchButton = styled.span`
     transform: translateX(-100%);
   }
   ${SwitchLabel}:active & {
-    width: 45px;
+    width: 40px;
   }
 `;
 
