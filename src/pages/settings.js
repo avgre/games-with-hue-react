@@ -55,6 +55,10 @@ class Settings extends Component {
       type: 'SET_LIGHTS',
       payload: bridgeLights,
     });
+    this.props.dispatch({
+      type: 'SET_CONNECTED',
+      payload: true,
+    });
   };
 
   fetchIP = async () => {
@@ -68,7 +72,6 @@ class Settings extends Component {
         type: 'SET_BRIDGE_IP',
         payload: bridgeIP[0].internalipaddress,
       });
-
       this.fetchLights(bridgeIP[0].internalipaddress);
       this.setState({ newData: new Date() });
       this.requestFailed = false;
@@ -86,12 +89,12 @@ class Settings extends Component {
           console.log('error has occured', data);
         } else {
           this.props.dispatch({
-            type: 'SET_CONNECTED',
-            payload: true,
-          });
-          this.props.dispatch({
             type: 'SET_USER',
             payload: data[0].success.username,
+          });
+          this.props.dispatch({
+            type: 'SET_CONNECTED',
+            payload: true,
           });
           this.fetchLights(this.props.hubIp);
           this.setState({ newData: new Date() });
