@@ -252,7 +252,7 @@ const AnimationDiv = styled('div')`
   margin-top: 80px;
   @media (max-width: 768px) {
     margin-top: 60px;
-    transform: scale(0.6);
+    transform: scale(0.75);
   }
 `;
 
