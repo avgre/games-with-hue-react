@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 function LightControl(props) {
   console.log(props.type);
-  const [isToggled, setIsToggled] = useState(false);
+
   const [isClicked, setIsClicked] = useState(null);
   const handleChange = (event) => {
     props.onchange(event);
@@ -62,7 +62,6 @@ function LightControl(props) {
             id={'Switch' + props.id}
             toggled={props.isOn}
             onChange={(e) => {
-              setIsToggled(e.target.checked);
               props.onToggleLight(props.id, props.isOn);
             }}
             color={chooseColor(props.isOn)}

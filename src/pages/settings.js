@@ -176,7 +176,6 @@ class Settings extends Component {
             id={id}
             name={data[id].name}
             isOn={item.state.on}
-            toggled={false}
             bri={item.state.bri}
             onToggleLight={toggleHandler}
             onBrightnessChanged={brightnessHandler}
