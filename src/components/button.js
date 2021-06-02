@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 const Pushable = styled.button`
+  font-family: 'Boogaloo', cursive;
   position: relative;
   border: none;
   background: transparent;

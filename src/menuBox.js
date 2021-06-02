@@ -7,22 +7,33 @@ import Button from './components/button';
 const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   text-align: center;
-  height: auto;
   flex: 0 0 33%;
   max-width: 300px;
+  height: 500px;
+  padding: 20px;
+  @media (max-width: 768px) {
+    height: 450px;
+  }
 `;
 const StyledBox = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const StyledTitle = styled.div``;
+const StyledTitle = styled.div`
+  font-weight: bold;
+  font-size: 1.2rem;
+`;
 const StyledImg = styled.img`
   border-radius: 20px;
   width: 300px;
   height: 250px;
+  @media (max-width: 768px) {
+    width: 250px;
+    height: 200px;
+  }
 `;
 const StyledText = styled.div`
   max-width: 100%;
@@ -40,7 +51,6 @@ const StyledLink = styled(Link)`
 class MenuBox extends Component {
   handleClick = (evt) => {
     evt.preventDefault();
-    console.log('whatthe');
   };
   render() {
     return (
@@ -57,7 +67,7 @@ class MenuBox extends Component {
             bg2={'112deg 39% 32%'}
             onClick={this.handleClick}
           >
-            Play
+            PLAY
           </Button>
         </StyledLink>
       </StyledWrapper>
