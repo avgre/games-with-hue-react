@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
-import Button from './components/button';
+import Button from './button';
 
 const StyledWrapper = styled.div`
   display: flex;

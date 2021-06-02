@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import MenuBox from './menuBox';
-import Data from './gameData';
+import MenuBox from '../components/menuBox.js';
+import Data from '../gameData';
 
 const StyledGameMenu = styled('div')`
   display: flex;
