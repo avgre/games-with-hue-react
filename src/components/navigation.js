@@ -94,7 +94,6 @@ const StyledLink = styled(NavLink)`
     transition: all 0.4s ease-in;
   }
   :hover {
-    color: #084f87;
     ::after {
       width: 100%;
     }
