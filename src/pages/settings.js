@@ -39,6 +39,10 @@ class Settings extends Component {
   };
 
   componentDidMount() {
+    this.props.dispatch({
+      type: 'SET_CONNECTED',
+      payload: false,
+    });
     if (this.props.connected === false) this.fetchIP();
   }
 
@@ -48,13 +52,19 @@ class Settings extends Component {
       'https://' + ip + '/api/' + this.props.user + '/lights'
     );
     if (!response.ok) {
+      console.log('light fetch error');
       throw new Error('Network request failed');
+    } else {
+      let bridgeLights = await response.json();
+      this.props.dispatch({
+        type: 'SET_LIGHTS',
+        payload: bridgeLights,
+      });
+      this.props.dispatch({
+        type: 'SET_CONNECTED',
+        payload: true,
+      });
     }
-    let bridgeLights = await response.json();
-    this.props.dispatch({
-      type: 'SET_LIGHTS',
-      payload: bridgeLights,
-    });
   };
 
   fetchIP = async () => {
@@ -88,7 +98,10 @@ class Settings extends Component {
             type: 'SET_USER',
             payload: data[0].success.username,
           });
-
+          this.props.dispatch({
+            type: 'SET_CONNECTED',
+            payload: true,
+          });
           this.fetchLights(this.props.hubIp);
           this.setState({ newData: new Date() });
           this.requestFailed = false;
@@ -157,10 +170,6 @@ class Settings extends Component {
         payload: false,
       });
     } else {
-      this.props.dispatch({
-        type: 'SET_CONNECTED',
-        payload: true,
-      });
       Object.keys(data).forEach(function (id, index) {
         const item = data[id];
         const light = (
