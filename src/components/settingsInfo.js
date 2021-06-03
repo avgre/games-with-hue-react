@@ -118,7 +118,7 @@ function Info(props) {
     <InfoFlex>
       <InfoIP>
         <Title>IP Address:</Title>
-        <Span>{props.ip}</Span>
+        <Security href={'https://' + props.ip + '/'}>{props.ip}</Security>
         {chooseStatus(props.ip)}
       </InfoIP>
       <InfoAuth>{chooseStep(isClicked, isOpen)}</InfoAuth>
@@ -200,6 +200,12 @@ const Existing = styled.button`
 const Span = styled.span`
   margin-top: 20px;
   font-weight: 500;
+`;
+const Security = styled.a`
+  margin-top: 20px;
+  font-weight: 500;
+  text-decoration: none;
+  color: white;
 `;
 const TipSpan = styled.span`
   margin-left: 20px;
