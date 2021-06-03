@@ -45,7 +45,7 @@ class Settings extends Component {
   fetchLights = async (ip) => {
     console.log('fetchLights called');
     let response = await fetch(
-      'http://' + ip + '/api/' + this.props.user + '/lights'
+      'https://' + ip + '/api/' + this.props.user + '/lights'
     );
     if (!response.ok) {
       throw new Error('Network request failed');
@@ -75,7 +75,7 @@ class Settings extends Component {
   };
 
   createUser = () => {
-    fetch('http://' + this.props.hubIp + '/api/', {
+    fetch('https://' + this.props.hubIp + '/api/', {
       method: 'POST',
       body: '{"devicetype":"games_with_hue#browser"}',
     })
@@ -98,7 +98,7 @@ class Settings extends Component {
 
   changeLight = (id, bodyData) => {
     const url =
-      'http://' +
+      'https://' +
       this.props.hubIp +
       '/api/' +
       this.props.user +
