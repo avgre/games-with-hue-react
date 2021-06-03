@@ -5,8 +5,6 @@ import Button from './button.js';
 import { connect } from 'react-redux';
 
 function LightControl(props) {
-  console.log(props.type);
-
   const [isClicked, setIsClicked] = useState(null);
   const handleChange = (event) => {
     props.onchange(event);

@@ -64,6 +64,8 @@ class Settings extends Component {
         type: 'SET_CONNECTED',
         payload: true,
       });
+      this.setState({ newData: new Date() });
+      this.requestFailed = false;
     }
   };
 
@@ -164,7 +166,7 @@ class Settings extends Component {
     const data = this.props.lights;
     const lights = [];
     if (this.props.lights.length === 1) {
-      console.log('error');
+      console.log('error', this.props.lights.length);
       this.props.dispatch({
         type: 'SET_CONNECTED',
         payload: false,
