@@ -1,5 +1,5 @@
-const fetch = require('node-fetch');
-exports.handler = async (event, context) => {
+const fetch = require('isomorphic-fetch');
+exports.handler = async (event) => {
   console.log('http://' + event.body + '/api/');
   try {
     const response = await fetch('http://' + event.body + '/api/', {
