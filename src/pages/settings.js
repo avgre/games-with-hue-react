@@ -41,16 +41,38 @@ class Settings extends Component {
   componentDidMount() {
     this.fetchIP();
   }
+  sendIP = (data) => {
+    fetch('/.netlify/functions/create', {
+      method: 'POST',
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json[0].error) {
+          let error = json[0].error.description;
+          console.log(error);
+        } else if (json[0].success) {
+          let username = json[0].success.username;
+          console.log(username);
+          this.props.dispatch({
+            type: 'SET_USER',
+            payload: username,
+          });
+          this.props.dispatch({
+            type: 'SET_CONNECTED',
+            payload: true,
+          });
+        } else console.log('error has occured');
+      });
+  };
 
   fetchLights = async (ip) => {
-    console.log('fetchLights called');
     let response = await fetch(
       'https://' + ip + '/api/' + this.props.user + '/lights'
     );
     if (!response.ok) {
       throw new Error('Network request failed');
     } else if (response.ok) {
-      console.log('lights fetched', response);
       let bridgeLights = await response.json();
       this.props.dispatch({
         type: 'SET_LIGHTS',
@@ -66,7 +88,6 @@ class Settings extends Component {
   };
 
   fetchIP = async () => {
-    console.log('fetchIP called');
     const response = await fetch('https://discovery.meethue.com/');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,33 +97,16 @@ class Settings extends Component {
         type: 'SET_BRIDGE_IP',
         payload: bridgeIP[0].internalipaddress,
       });
-      this.fetchLights(bridgeIP[0].internalipaddress);
+      // this.fetchLights(bridgeIP[0].internalipaddress);
     }
   };
 
   createUser = () => {
-    fetch('https://' + this.props.hubIp + '/api/', {
-      method: 'POST',
-      body: '{"devicetype":"games_with_hue#browser"}',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data[0].error) {
-          console.log('error has occured', data);
-        } else {
-          this.props.dispatch({
-            type: 'SET_USER',
-            payload: data[0].success.username,
-          });
-          this.props.dispatch({
-            type: 'SET_CONNECTED',
-            payload: true,
-          });
-          this.fetchLights(this.props.hubIp);
-          this.setState({ newData: new Date() });
-          this.requestFailed = false;
-        }
-      });
+    const hub = this.props.hubIp;
+    this.sendIP(hub);
+    // this.fetchLights(this.props.hubIp);
+    // this.setState({ newData: new Date() });
+    // this.requestFailed = false;
   };
 
   changeLight = (id, bodyData) => {
@@ -160,7 +164,6 @@ class Settings extends Component {
     const data = this.props.lights;
     const lights = [];
     if (this.props.lights.length === 1) {
-      console.log('error', this.props.lights.length);
       this.props.dispatch({
         type: 'SET_CONNECTED',
         payload: false,
