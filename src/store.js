@@ -10,6 +10,7 @@ const persistConfig = {
 const initialState = {
   hubAddress: undefined,
   hubUsername: undefined,
+  authCode: undefined,
   lights: {},
   selectedLight: '',
   connected: false,
@@ -39,6 +40,8 @@ function reducer(state = initialState, action) {
       return { ...state, selectedLight: action.payload };
     case 'SET_CONNECTED':
       return { ...state, connected: action.payload };
+    case 'SET_CODE':
+      return { ...state, authCode: action.payload };
     default:
       return state;
   }

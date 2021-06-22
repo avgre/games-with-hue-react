@@ -18,7 +18,7 @@ class Settings extends Component {
     };
     this.onToggleLight = this.onToggleLight.bind(this);
     this.onBrightnessChanged = this.onBrightnessChanged.bind(this);
-    this.fetchLights = this.fetchLights.bind(this);
+    // this.fetchLights = this.fetchLights.bind(this);
   }
   chooseAnimation = () => {
     if (this.props.connected) {
@@ -37,73 +37,122 @@ class Settings extends Component {
       );
     }
   };
-
+  getQueryStringParams = (query) => {
+    return query
+      ? (/^[?#]/.test(query) ? query.slice(1) : query)
+          .split('&')
+          .reduce((params, param) => {
+            let [key, value] = param.split('=');
+            params[key] = value
+              ? decodeURIComponent(value.replace(/\+/g, ' '))
+              : '';
+            return params;
+          }, {})
+      : {};
+  };
   componentDidMount() {
-    this.fetchIP();
+    // this.fetchIP();
+    const code = this.getQueryStringParams(this.props.location.search);
+    if (code.code){this.getNonce(code.code)}
+    
   }
-  sendIP = (data) => {
-    fetch('/.netlify/functions/create', {
-      method: 'POST',
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json[0].error) {
-          let error = json[0].error.description;
-          console.log(error);
-        } else if (json[0].success) {
-          let username = json[0].success.username;
-          console.log(username);
-          this.props.dispatch({
-            type: 'SET_USER',
-            payload: username,
-          });
-          this.props.dispatch({
-            type: 'SET_CONNECTED',
-            payload: true,
-          });
-        } else console.log('error has occured');
-      });
-  };
 
-  fetchLights = async (ip) => {
-    let response = await fetch(
-      'https://' + ip + '/api/' + this.props.user + '/lights'
-    );
-    if (!response.ok) {
-      throw new Error('Network request failed');
-    } else if (response.ok) {
-      let bridgeLights = await response.json();
-      this.props.dispatch({
-        type: 'SET_LIGHTS',
-        payload: bridgeLights,
-      });
-      this.props.dispatch({
-        type: 'SET_CONNECTED',
-        payload: true,
-      });
-      this.setState({ newData: new Date() });
-      this.requestFailed = false;
-    } else console.log('light fetch error', response);
-  };
-
-  fetchIP = async () => {
-    const response = await fetch('https://discovery.meethue.com/');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
-      const bridgeIP = await response.json();
-      this.props.dispatch({
-        type: 'SET_BRIDGE_IP',
-        payload: bridgeIP[0].internalipaddress,
-      });
-      // this.fetchLights(bridgeIP[0].internalipaddress);
+  getNonce = (data) => {
+    if (data) {
+      fetch('/.netlify/functions/getNonce', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+         this.getToken(json.nonce, json.authCodeUrl)
+        });
+      return;
     }
   };
+  getToken = (nonce, url) => {
+      fetch('/.netlify/functions/getToken', {
+        method: 'POST',
+        body: JSON.stringify({nonce,url}),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+        });
+      return;
+  };
+
+  // sendIP = (data) => {
+  //   fetch('/.netlify/functions/create', {
+  //     method: 'POST',
+  //     body: data,
+  //   })
+  //     .then((res) => res.json())
+  //     .then((json) => {
+  //       if (json[0].error) {
+  //         let error = json[0].error.description;
+  //         console.log(error);
+  //       } else if (json[0].success) {
+  //         let username = json[0].success.username;
+  //         console.log(username);
+  //         this.props.dispatch({
+  //           type: 'SET_USER',
+  //           payload: username,
+  //         });
+  //         this.props.dispatch({
+  //           type: 'SET_CONNECTED',
+  //           payload: true,
+  //         });
+  //       } else console.log('error has occured');
+  //     });
+  // };
+
+  authUser = () => {
+    fetch('/.netlify/functions/serverlessFetch')
+      .then((res) => res.json())
+      .then((json) => {
+        window.location.href = json;
+      });
+    return;
+  };
+  // fetchLights = async (ip) => {
+  //   let response = await fetch(
+  //     'https://' + ip + '/api/' + this.props.user + '/lights'
+  //   );
+  //   if (!response.ok) {
+  //     throw new Error('Network request failed');
+  //   } else if (response.ok) {
+  //     let bridgeLights = await response.json();
+  //     this.props.dispatch({
+  //       type: 'SET_LIGHTS',
+  //       payload: bridgeLights,
+  //     });
+  //     this.props.dispatch({
+  //       type: 'SET_CONNECTED',
+  //       payload: true,
+  //     });
+  //     this.setState({ newData: new Date() });
+  //     this.requestFailed = false;
+  //   } else console.log('light fetch error', response);
+  // };
+
+  // fetchIP = async () => {
+  //   const response = await fetch('https://discovery.meethue.com/');
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   } else {
+  //     const bridgeIP = await response.json();
+  //     this.props.dispatch({
+  //       type: 'SET_BRIDGE_IP',
+  //       payload: bridgeIP[0].internalipaddress,
+  //     });
+  //     // this.fetchLights(bridgeIP[0].internalipaddress);
+  //   }
+  // };
 
   createUser = () => {
-    const hub = this.props.hubIp;
-    this.sendIP(hub);
+    // const hub = this.props.hubIp;
+    // this.sendIP(hub);
     // this.fetchLights(this.props.hubIp);
     // this.setState({ newData: new Date() });
     // this.requestFailed = false;
@@ -155,52 +204,56 @@ class Settings extends Component {
     }
   };
   render() {
-    const animation = this.chooseAnimation();
-    const toggleHandler = this.onToggleLight;
-    const brightnessHandler = this.onBrightnessChanged;
-    const onchange = (data) => {
-      this.setState({ setLight: data });
+    // const animation = this.chooseAnimation();
+    // const toggleHandler = this.onToggleLight;
+    // const brightnessHandler = this.onBrightnessChanged;
+    // const onchange = (data) => {
+    //   this.setState({ setLight: data });
+    // };
+    // const data = this.props.lights;
+    // const lights = [];
+    // if (this.props.lights.length === 1) {
+    //   this.props.dispatch({
+    //     type: 'SET_CONNECTED',
+    //     payload: false,
+    //   });
+    // } else {
+    //   Object.keys(data).forEach(function (id, index) {
+    //     const item = data[id];
+    //     const light = (
+    //       <LightControl
+    //         onchange={(e) => {
+    //           onchange(e);
+    //         }}
+    //         key={id}
+    //         id={id}
+    //         name={data[id].name}
+    //         isOn={item.state.on}
+    //         bri={item.state.bri}
+    //         onToggleLight={toggleHandler}
+    //         onBrightnessChanged={brightnessHandler}
+    //         type={item.type}
+    //       />
+    //     );
+    //     lights.push(light);
+    //   });
+    // }
+    const onPress = () => {
+      this.getToken(this.state.nonce,this.state.authUrl);
     };
-    const data = this.props.lights;
-    const lights = [];
-    if (this.props.lights.length === 1) {
-      this.props.dispatch({
-        type: 'SET_CONNECTED',
-        payload: false,
-      });
-    } else {
-      Object.keys(data).forEach(function (id, index) {
-        const item = data[id];
-        const light = (
-          <LightControl
-            onchange={(e) => {
-              onchange(e);
-            }}
-            key={id}
-            id={id}
-            name={data[id].name}
-            isOn={item.state.on}
-            bri={item.state.bri}
-            onToggleLight={toggleHandler}
-            onBrightnessChanged={brightnessHandler}
-            type={item.type}
-          />
-        );
-        lights.push(light);
-      });
-    }
     return (
       <StyledSettings>
-        {animation}
+        <button onClick={onPress}>CLICK</button>
+        {/* {animation} */}
         <SettingsFlex>
           <SettingsInfo
             user={this.props.user}
             ip={this.props.hubIp}
             step={this.state.step}
-            create={this.createUser}
+            create={this.authUser}
           />
-          {this.showSpan(this.props.connected)}
-          <LightsFlex>{lights}</LightsFlex>
+          {/* {this.showSpan(this.props.connected)}
+          <LightsFlex>{lights}</LightsFlex> */}
         </SettingsFlex>
       </StyledSettings>
     );
@@ -214,6 +267,7 @@ const mapStateToProps = (state) => {
     lights: state.lights,
     setLight: state.selectLight,
     connected: state.connected,
+    authCode: state.authCode,
   };
 };
 
