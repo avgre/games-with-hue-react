@@ -5,7 +5,7 @@ import { keyframes } from 'styled-components';
 import { ReactComponent as Hub } from '../images/hub.svg';
 import BulbOff from '../images/animation/bulbie-off.svg';
 import BulbOn from '../images/animation/bulbie-on.svg';
-import LightControl from '../components/settingsLight.js';
+// import LightControl from '../components/settingsLight.js';
 import SettingsInfo from '../components/settingsInfo.js';
 
 class Settings extends Component {
@@ -337,16 +337,16 @@ const SettingsFlex = styled('div')`
   display: flex;
   flex-wrap: wrap;
 `;
-const LightsFlex = styled('div')`
-  flex: 0 0 100%;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  @media (max-width: 768px) {
-    justify-content: center;
-  }
-`;
+// const LightsFlex = styled('div')`
+//   flex: 0 0 100%;
+//   width: 100%;
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: space-between;
+//   @media (max-width: 768px) {
+//     justify-content: center;
+//   }
+// `;
 
 const InfoSpan = styled.span`
   margin-top: 40px;
