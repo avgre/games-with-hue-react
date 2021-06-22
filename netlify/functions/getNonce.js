@@ -2,9 +2,9 @@
 const fetch = require('isomorphic-fetch');
 
 exports.handler = async (event) => {
+  console.log(event.body)
   let authCodeUrl =
-    'https://api.meethue.com/v2/oauth2/token?grant_type=authorization_code&code=' +
-    JSON.parse(event.body);
+  `https://api.meethue.com/oauth2/token?grant_type=authorization_code&code=${event.body}`
   try {
     const response = await fetch(authCodeUrl, {
       method: 'POST',
@@ -23,6 +23,7 @@ exports.handler = async (event) => {
     });
     
     const nonce = wwwAuthValues.nonce;
+    console.log("NONCE: ",nonce)
    return {
       statusCode: 200,
       body: JSON.stringify({nonce, authCodeUrl}),

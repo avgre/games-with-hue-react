@@ -12,39 +12,56 @@ let authCodeUrl = data.url
 try {
     const nonce = data.nonce;
     const realm = 'oauth2_client@api.meethue.com';
-    const path = '/oauth2/token';
-    const method = 'POST';
-    
-  function getDigestResponse(realm, nonce, method, path) {
-    const clientId = process.env.REACT_APP_CLIENT_ID;
+    const clientID = process.env.REACT_APP_CLIENT_ID;
     const clientSecret = process.env.REACT_APP_CLIENT_ID;
-    let hashOne = crypto.createHash('md5').update(`${clientId}:${realm}:${clientSecret}`).digest('hex');
-    let hashTwo = crypto.createHash('md5').update(`${method.toUpperCase()}:${path}`).digest('hex');
-    let hash = crypto.createHash('md5').update(`${hashOne}:${nonce}:${hashTwo}`).digest('hex');
-    console.log("HASH",hashOne,hashTwo, hash)
+    
+  // function getDigestResponse(realm, nonce, method, path) {
+  
+  //   let hashOne = crypto.createHash('md5').update(`${clientId}:${realm}:${clientSecret}`).digest('hex');
+  //   let hashTwo = crypto.createHash('md5').update(`${method.toUpperCase()}:${path}`).digest('hex');
+  //   let hash = crypto.createHash('md5').update(`${hashOne}:${nonce}:${hashTwo}`).digest('hex');
+  //   console.log("HASH",hashOne,hashTwo, hash)
 
-    if (!clientId) {
-      console.log('clientId has not been provided, unable to build a digest response');
-    }
+  //   if (!clientId) {
+  //     console.log('clientId has not been provided, unable to build a digest response');
+  //   }
 
-    if (!clientSecret) {
-      console.log('clientSecret has not been provided, unable to build a digest response');
-    }
+  //   if (!clientSecret) {
+  //     console.log('clientSecret has not been provided, unable to build a digest response');
+  //   }
 
-    return hash;
-  }
-  function getAuthorizationHeaderDigest(realm, nonce, method, path) {
-    const clientId = process.env.REACT_APP_CLIENT_ID;
-    let response = getDigestResponse(realm, nonce, method, path);
-    return `Digest username="${clientId}", realm="${realm}", nonce="${nonce}", uri="${path}", response="${response}"`;
-  }
-  let authHeader = getAuthorizationHeaderDigest(realm, nonce, method, path);
+  //   return hash;
+  // }
+
+ 
+
+function hash(str, algorithm, outEncoding) {
+    const hash = crypto.createHash(algorithm);
+    hash.update(str);
+    return hash.digest(outEncoding || 'base64');
+}
+function md5(str) {
+  return hash(str, 'md5', 'hex');
+}
+const hash1 = md5(`${clientID}:${realm}:${clientSecret}`);
+const hash2 = md5('POST:/oauth2/token')
+const response = md5(`${hash1}:${nonce}:${hash2}`);
+const authStr = `Digest username="${clientID}", realm="${realm}", nonce="${nonce}", uri="/oauth2/token", response="${response}"`;
+
+  // function getAuthorizationHeaderDigest(realm, nonce, method, path) {
+  //   const clientId = process.env.REACT_APP_CLIENT_ID;
+  //   let response = getDigestResponse(realm, nonce, method, path);
+  //   return `Digest username="${clientId}", realm="${realm}", nonce="${nonce}", uri="${path}", response="${response}"`;
+  // }
+  // let authHeader = getAuthorizationHeaderDigest(realm, nonce, method, path);
+
+
   console.log("HEADER: ", authHeader)
   const response = await fetch(authCodeUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': authHeader,
+        Authorization: authStr
       },
     });
     const data2 = await response.json();
